@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Portal</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #4facfe, #00f2fe);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      width: 900px;
+      height: 600px;
+      box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
+      display: none;
+    }
+
+    .active { display: block; }
+
+    /* Login & Signup */
+    #loginPage, #signupPage {
+      width: 350px;
+      height: auto;
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      outline: none;
+    }
+
+    button {
+      margin-top: 15px;
+      width: 100%;
+      padding: 10px;
+      background: #4facfe;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover { background: #00c6fb; }
+
+    .link-text {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+    .link-text a { color: #4facfe; text-decoration: none; }
+
+    /* Dashboard */
+    .dashboard { display: flex; height: 100%; }
+
+    .sidebar {
+      width: 220px;
+      background: #4facfe;
+      border-radius: 12px 0 0 12px;
+      color: white;
+      padding: 15px;
+    }
+    .sidebar h3 { text-align: center; margin-bottom: 20px; }
+    .sidebar ul { list-style: none; padding: 0; }
+    .sidebar li { margin: 15px 0; }
+    .sidebar a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      display: block;
+      padding: 8px;
+      border-radius: 6px;
+      transition: 0.3s;
+    }
+    .sidebar a:hover { background: #00c6fb; }
+
+    .content { flex: 1; padding: 20px; overflow-y: auto; }
+
+    .profile-pic img {
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      border: 3px solid #4facfe;
+      margin-bottom: 10px;
+    }
+
+    .logout-btn { margin-top: 20px; width: 100%; background: #ff4d4d; }
+  </style>
+</head>
+<body>
+  <!-- LOGIN PAGE -->
+  <div id="loginPage" class="container active">
+    <h2>Student Portal Login</h2>
+    <form id="loginForm">
+      <label>Student Number</label>
+      <input type="text" id="loginStudentNumber" required>
+      <label>Password</label>
+      <input type="password" id="loginPassword" required>
+      <button type="submit">Login</button>
+      <p class="link-text">No account? <a href="#" onclick="goToSignup()">Sign Up</a></p>
+    </form>
+  </div>
+
+  <!-- SIGNUP PAGE -->
+  <div id="signupPage" class="container">
+    <h2>Create Account</h2>
+    <form id="signupForm">
+      <label>Student Number</label>
+      <input type="text" id="signupStudentNumber" required>
+      <label>Full Name</label>
+      <input type="text" id="signupName" required>
+      <label>Course</label>
+      <input type="text" id="signupCourse" required>
+      <label>Password</label>
+      <input type="password" id="signupPassword" required>
+      <button type="submit">Sign Up</button>
+      <p class="link-text">Already have an account? <a href="#" onclick="goToLogin()">Login</a></p>
+    </form>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboardPage" class="container">
+    <div class="dashboard">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <h3>Menu</h3>
+        <ul>
+          <li><a href="#" onclick="showSection('profile')">👤 Profile</a></li>
+          <li><a href="#" onclick="showSection('courses')">📚 Courses</a></li>
+          <li><a href="#" onclick="showSection('ledger')">📑 Ledger</a></li>
+          <li><a href="#" onclick="showSection('announcements')">📢 Announcements</a></li>
+          <li><a href="#" onclick="showSection('calendar')">📅 Calendar</a></li>
+          <li><a href="#" onclick="showSection('tuition')">💰 Tuition</a></li>
+        </ul>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
+
+      <!-- Content -->
+      <div class="content">
+        <!-- Profile -->
+        <div id="profile" class="section active">
+          <h2>Profile</h2>
+          <div class="profile-pic">
+            <img src="https://via.placeholder.com/120" alt="Profile Picture">
+          </div>
+          <p><b>Student Number:</b> <span id="profileNumber"></span></p>
+          <p><b>Name:</b> <span id="profileName"></span></p>
+          <p><b>Course:</b> <span id="profileCourse"></span></p>
+          <p><b>Year Level:</b> 3rd Year</p>
+        </div>
+
+        <!-- Courses -->
+        <div id="courses" class="section" style="display:none;">
+          <h2>My Courses</h2>
+          <ul>
+            <li>IT 301 - Web Development</li>
+            <li>IT 302 - Database Systems</li>
+            <li>IT 303 - Networking</li>
+            <li>IT 304 - Software Engineering</li>
+          </ul>
+        </div>
+
+        <!-- Ledger -->
+        <div id="ledger" class="section" style="display:none;">
+          <h2>Ledger</h2>
+          <p>Total Balance: <b>₱ 25,000</b></p>
+          <p>Status: <b>Unpaid</b></p>
+        </div>
+
+        <!-- Announcements -->
+        <div id="announcements" class="section" style="display:none;">
+          <h2>Announcements</h2>
+          <ul>
+            <li>📢 Midterm exams start next week.</li>
+            <li>📢 Deadline for tuition payment: October 15.</li>
+          </ul>
+        </div>
+
+        <!-- Calendar -->
+        <div id="calendar" class="section" style="display:none;">
+          <h2>Calendar</h2>
+          <p>🗓️ October 10 - Programming Quiz</p>
+          <p>🗓️ October 15 - Tuition Deadline</p>
+          <p>🗓️ October 20 - Midterms Start</p>
+        </div>
+
+        <!-- Tuition -->
+        <div id="tuition" class="section" style="display:none;">
+          <h2>Tuition Payment</h2>
+          <p>Options:</p>
+          <ul>
+            <li>💵 Full Payment: ₱25,000</li>
+            <li>💳 Installment: 5 payments of ₱5,000</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ===== JAVASCRIPT ===== */
+
+    const loginPage = document.getElementById("loginPage");
+    const signupPage = document.getElementById("signupPage");
+    const dashboardPage = document.getElementById("dashboardPage");
+
+    const loginForm = document.getElementById("loginForm");
+    const signupForm = document.getElementById("signupForm");
+
+    const profileNumber = document.getElementById("profileNumber");
+    const profileName = document.getElementById("profileName");
+    const profileCourse = document.getElementById("profileCourse");
+
+    // === Navigation between login & signup ===
+    function goToSignup(){
+      loginPage.classList.remove("active");
+      signupPage.classList.add("active");
+    }
+    function goToLogin(){
+      signupPage.classList.remove("active");
+      loginPage.classList.add("active");
+    }
+
+    // === Signup Function ===
+    signupForm.addEventListener("submit", function(e){
+      e.preventDefault();
+      const studentNumber = document.getElementById("signupStudentNumber").value;
+      const name = document.getElementById("signupName").value;
+      const course = document.getElementById("signupCourse").value;
+      const password = document.getElementById("signupPassword").value;
+
+      // Save to localStorage
+      let accounts = JSON.parse(localStorage.getItem("accounts")) || [];
+      const exists = accounts.find(acc => acc.studentNumber === studentNumber);
+
+      if(exists){
+        alert("⚠️ Account already exists!");
+      } else {
+        accounts.push({ studentNumber, name, course, password });
+        localStorage.setItem("accounts", JSON.stringify(accounts));
+        alert("✅ Account created successfully!");
+        goToLogin();
+      }
+    });
+
+    // === Login Function ===
+    loginForm.addEventListener("submit", function(e){
+      e.preventDefault();
+      const studentNumber = document.getElementById("loginStudentNumber").value;
+      const password = document.getElementById("loginPassword").value;
+
+      let accounts = JSON.parse(localStorage.getItem("accounts")) || [];
+      const account = accounts.find(acc => acc.studentNumber === studentNumber && acc.password === password);
+
+      if(account){
+        profileNumber.textContent = account.studentNumber;
+        profileName.textContent = account.name;
+        profileCourse.textContent = account.course;
+
+        loginPage.classList.remove("active");
+        dashboardPage.classList.add("active");
+      } else {
+        alert("❌ Invalid Student Number or Password!");
+      }
+    });
+
+    // === Show section ===
+    function showSection(sectionId){
+      document.querySelectorAll(".section").forEach(sec => sec.style.display = "none");
+      document.getElementById(sectionId).style.display = "block";
+    }
+
+    // === Logout ===
+    function logout(){
+      dashboardPage.classList.remove("active");
+      loginPage.classList.add("active");
+      loginForm.reset();
+    }
+  </script>
+</body>
+</html>
